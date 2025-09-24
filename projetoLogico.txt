@@ -30,6 +30,8 @@ cupomDesconto(#idCupom, código,status, tipoDesconto)
 
 categoria (#idCategoria, tipo, descricao, @idProduto)
 
+troca (#idTroca, status, motivo, produtoDevolvido, produtoEntregue, @idPedido)
+
 
 
 
