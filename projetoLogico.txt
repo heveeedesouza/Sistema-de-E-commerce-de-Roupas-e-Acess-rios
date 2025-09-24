@@ -28,6 +28,8 @@ entrega(#idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastre
 
 cupomDesconto(#idCupom, código,status, tipoDesconto)
 
+categoria (#idCategoria, tipo, descricao)
+
 
 
 
