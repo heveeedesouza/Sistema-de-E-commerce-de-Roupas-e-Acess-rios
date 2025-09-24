@@ -1,0 +1,34 @@
+promoção(#idPromocao, nome, descrição,status,dataInicio, dataFim)
+
+produto(#idProduto, descrição, nome, preco,quantEstoque, cor, tamanho, categoria)
+
+ProdutoPromocao(#@idPromocao, #@idProduto, descricao)  
+
+fornecedor (#idFornecedor, CNPJ, contato, nome, numero, rua, cep)
+
+ProdutoFornecedor (#@idFornecedor, #@idProduto,descricao)
+
+avaliação(#idAvaliacao, nota, descrição , @idProduto , @idCliente)
+
+cliente(#idCliente, nome, cpf, telefone, numero, rua, cep)
+
+pedido(#idPedido, dataCompra, valorTotal, status, formaDePagamento, histórico , @idEntrega)
+
+ItensPedido(#@idPedido, #@idProduto, descricao)
+
+cupomDesconto(#idCupom, código, status, tipoDeDesconto)
+
+pedidoCupom (#@idPedido, #@idCupom, descricao)
+
+devolução(#idDevolucao, status, motivo, @pedido)
+
+pagamento (#idPagamento, status, valor, data, modalidade, @idPedido)
+
+entrega(#idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastreio)
+
+cupomDesconto(#idCupom, código,status, tipoDesconto)
+
+
+
+
+
