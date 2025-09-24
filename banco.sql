@@ -127,7 +127,7 @@ create table pagamento(
 create table ItensPedido (
     idPedido INT NOT NULL,
     idProduto INT NOT NULL,
-    descricao varchar (200) not null default,
+    descricao varchar (200) not null,
     primary key (idPedido, idProduto),
     foreign key (idPedido) references pedido(idPedido),
     foreign key (idProduto) references produto(idProduto)
