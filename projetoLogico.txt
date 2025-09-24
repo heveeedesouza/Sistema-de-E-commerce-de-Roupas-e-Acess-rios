@@ -1,6 +1,6 @@
 promoção(#idPromocao, nome, descrição,status,dataInicio, dataFim @idCategoria)
 
-produto(#idProduto, descrição, nome, preco,quantEstoque, cor, tamanho, categoria)
+produto(#idProduto, descrição, nome, preco,quantEstoque, cor, tamanho)
 
 RelacaoPromocao(#@idPromocao, #@idProduto, descricao)  
 
@@ -25,8 +25,6 @@ devolução(#idDevolucao, status, motivo, @pedido)
 pagamento (#idPagamento, status, valor, data, modalidade, @idPedido)
 
 entrega(#idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastreio)
-
-cupomDesconto(#idCupom, código,status, tipoDesconto)
 
 categoria (#idCategoria, tipo, descricao, @idProduto)
 
