@@ -1,4 +1,4 @@
-promoção(#idPromocao, nome, descrição,status,dataInicio, dataFim)
+promoção(#idPromocao, nome, descrição,status,dataInicio, dataFim @idCategoria)
 
 produto(#idProduto, descrição, nome, preco,quantEstoque, cor, tamanho, categoria)
 
@@ -28,7 +28,7 @@ entrega(#idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastre
 
 cupomDesconto(#idCupom, código,status, tipoDesconto)
 
-categoria (#idCategoria, tipo, descricao)
+categoria (#idCategoria, tipo, descricao, @idProduto)
 
 
 
