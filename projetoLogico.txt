@@ -2,11 +2,11 @@ promoção(#idPromocao, nome, descrição,status,dataInicio, dataFim)
 
 produto(#idProduto, descrição, nome, preco,quantEstoque, cor, tamanho, categoria)
 
-ProdutoPromocao(#@idPromocao, #@idProduto, descricao)  
+RelacaoPromocao(#@idPromocao, #@idProduto, descricao)  
 
 fornecedor (#idFornecedor, CNPJ, contato, nome, numero, rua, cep)
 
-ProdutoFornecedor (#@idFornecedor, #@idProduto,descricao)
+Fornece (#@idFornecedor, #@idProduto,descricao)
 
 avaliação(#idAvaliacao, nota, descrição , @idProduto , @idCliente)
 
@@ -18,7 +18,7 @@ ItensPedido(#@idPedido, #@idProduto, descricao)
 
 cupomDesconto(#idCupom, código, status, tipoDeDesconto)
 
-pedidoCupom (#@idPedido, #@idCupom, descricao)
+Ganha (#@idPedido, #@idCupom, descricao)
 
 devolução(#idDevolucao, status, motivo, @pedido)
 
