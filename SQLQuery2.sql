@@ -1,4 +1,3 @@
--- Apaga as tabelas existentes para uma execuÁ„o limpa
 DROP TABLE IF EXISTS Ganha;
 DROP TABLE IF EXISTS ItensPedido;
 DROP TABLE IF EXISTS pagamento;
@@ -171,25 +170,25 @@ create table troca (
 
 
 -------------------------------------------------------
--- INSER«’ES INICIAIS
+-- INSER√á√ïES INICIAIS
 -------------------------------------------------------
 -- Inserir cliente
 insert into cliente (idCliente, nome, cpf, telefone, numero, rua, cep)
 values (1, 'Maria', '12345678901', '99887766', '123', 'Rua das Flores', '49000-000');
 
--- Inserir fornecedores( 2 fornecedores para atender a solicitaÁ„o de mais de um fornecedor)
+-- Inserir fornecedores( 2 fornecedores para atender a solicita√ß√£o de mais de um fornecedor)
 insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)
 values (1, '11222333000199', '99887766', 'Fornecedor1', '45', 'Rua Itabaiana', '49000-111');
 
 insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)
-values (2, '99887766000188', '955773344', 'Fornecedor2', '40', 'Rua RibeirÛpolis', '49530-010');
+values (2, '99887766000188', '955773344', 'Fornecedor2', '40', 'Rua Ribeir√≥polis', '49530-010');
 
 -- Inserir categorias
 insert into categoria (idCategoria, tipo, descricao)
-values (1, 'Vestu·rio', 'Roupas, Casacos, CalÁas, Vestidos, CalÁados.');
+values (1, 'Vestu√°rio', 'Roupas, Casacos, Cal√ßas, Vestidos, Cal√ßados.');
 
 insert into categoria (idCategoria, tipo, descricao)
-values (2, 'AcessÛrios', 'Brincos, Colares, AnÈis, Pulseiras, Bolsas');
+values (2, 'Acess√≥rios', 'Brincos, Colares, An√©is, Pulseiras, Bolsas');
 
 -- Inserir produtos 
 insert into produto (idProduto, descricao, nome, preco, quantEstoque, cor, tamanho, idCategoria)
@@ -213,7 +212,7 @@ values (1, 2, 'Fornecedor alternativo do Vestido Azul');
 
 -- Inserir pedido
 insert into pedido (idPedido, dataCompra, valorTotal, status, formaDePagamento, historico, idEntrega, idCliente)
-values (1, getdate(),429.90 , 'pagamento pendente', 'cart„o', 'Pedido criado', null, 1);
+values (1, getdate(),429.90 , 'pagamento pendente', 'cart√£o', 'Pedido criado', null, 1);
 
 -- Inserir itens do pedido
 insert into ItensPedido (idPedido, idProduto, descricao)
@@ -225,7 +224,7 @@ update pedido set status = 'em processamento' where idPedido = 1;
 
 -- Inserir pagamento
 insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
-values (1, 'confirmado', 199.90, getdate(), 'cart„o', 1);
+values (1, 'confirmado', 199.90, getdate(), 'cart√£o', 1);
 
 -- Inserir cupom de desconto
 insert into cupomDesconto (idCupom, codigo, status, tipoDeDesconto, dataValidade)
@@ -235,40 +234,40 @@ values (1, 'DESC10', 'ativo', '10%', '2025-12-31');
 insert into Ganha (idPedido, idCupom, descricao)
 values (1, 1, 'Desconto aplicado de 10%');
 
--- Inserir promoÁ„o (precisa que a categoria seja criada antes)
+-- Inserir promo√ß√£o (precisa que a categoria seja criada antes)
 insert into promocao (idPromocao, nome, descricao, status, dataInicio, dataFim, idCategoria)
-values (1, 'Promo Ver„o', 'Desconto roupas', 'ativa', '2025-09-01', '2025-09-30', 1);
+values (1, 'Promo Ver√£o', 'Desconto roupas', 'ativa', '2025-09-01', '2025-09-30', 1);
 
 -- Inserir entrega
 insert into entrega (idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastreio)
 values (1, '2025-09-30', 'pendente', NULL, 'Correios', 'BR123456789');
 
--- Inserir devoluÁ„o
+-- Inserir devolu√ß√£o
 insert into devolucao (idDevolucao, status, motivo, idPedido)
-values (1, 'em an·lise', 'Tamanho incorreto', 1);
+values (1, 'em an√°lise', 'Tamanho incorreto', 1);
 
--- Inserir avaliaÁ„o
+-- Inserir avalia√ß√£o
 insert into avaliacao (idAvaliacao, nota, descricao, idProduto, idCliente)
-values (1, 5, 'Vestido lindo e confort·vel!', 1, 1);
+values (1, 5, 'Vestido lindo e confort√°vel!', 1, 1);
 
 -------------------------------------------------------
--- ATUALIZA«’ES E REMO«’ES
+-- ATUALIZA√á√ïES E REMO√á√ïES
 -------------------------------------------------------
 
--- Atualizar preÁo do produto
+-- Atualizar pre√ßo do produto
 update produto set preco = 179.90 where idProduto = 1;
 
 -- Atualizar estoque (diminuir 1 unidade)
 update produto set quantEstoque = quantEstoque - 1 where idProduto = 1;
 
 -- Excluir produto
--- 1. Exclua a avaliaÁ„o que referencia o produto
+-- 1. Exclua a avalia√ß√£o que referencia o produto
 delete from avaliacao where idProduto = 1;
 -- 2. Exclua o item do pedido que referencia o produto
 delete from ItensPedido where idProduto = 1;
 -- 3. Exclua o relacionamento do produto com os fornecedores
 delete from Fornece where idProduto = 1;
--- 4. Agora, exclua o produto, que n„o È mais referenciado
+-- 4. Agora, exclua o produto, que n√£o √© mais referenciado
 delete from produto where idProduto = 1;
 
 -------------------------------------------------------
@@ -281,7 +280,7 @@ select * from pedido where idPedido in (
   join produto p on ip.idProduto = p.idProduto
 );
 
--- Nome do produto e descriÁ„o do item do pedido
+-- Nome do produto e descri√ß√£o do item do pedido
 select p.nome, ip.descricao
 from ItensPedido ip
 join produto p on ip.idProduto = p.idProduto
@@ -298,7 +297,7 @@ select * from pedido
 where status = 'entregue'
 and dataCompra between '2025-09-01' and '2025-09-30';
 
--- Produtos em promoÁ„o ativa
+-- Produtos em promo√ß√£o ativa
 select p.nome, pr.nome as Promocao
 from RelacaoPromocao rp
 join produto p on rp.idProduto = p.idProduto
@@ -315,7 +314,7 @@ select distinct c.nome
 from cliente c
 join avaliacao a on c.idCliente = a.idCliente;
 
--- Clientes com pedidos n„o entregues ou sem entrega
+-- Clientes com pedidos n√£o entregues ou sem entrega
 select distinct c.nome
 from cliente c
 join pedido p on p.idEntrega is null or p.status <> 'entregue';
@@ -332,18 +331,18 @@ from Fornece fn
 join produto p on fn.idProduto = p.idProduto
 where fn.idFornecedor = 1;
 
--- Produtos agrupados por categoria com maior preÁo
+-- Produtos agrupados por categoria com maior pre√ßo
 select c.tipo, p.nome, max(p.preco) as MaiorPreco
 from produto p
 join categoria c on p.idCategoria = c.idCategoria
 group by c.tipo, p.nome;
 
--- Total de pedidos no perÌodo
+-- Total de pedidos no per√≠odo
 select count(*) as TotalPedidos
 from pedido
 where dataCompra between '2025-09-01' and '2025-09-30';
 
--- Valor total de vendas no perÌodo
+-- Valor total de vendas no per√≠odo
 select sum(valorTotal) as TotalVendas
 from pedido
 where dataCompra between '2025-09-01' and '2025-09-30';
@@ -375,13 +374,13 @@ from cliente cl
 join pedido p on cl.idCliente = p.idCliente
 join Ganha g on p.idPedido = g.idPedido;
 
--- Clientes que fizeram devoluÁıes
+-- Clientes que fizeram devolu√ß√µes
 select distinct cl.nome
 from cliente cl
 join pedido p on cl.idCliente = p.idCliente
 join devolucao d on p.idPedido = d.idPedido;
 
--- Produtos sem avaliaÁ„o
+-- Produtos sem avalia√ß√£o
 select p.nome
 from produto p
 where p.idProduto not in (select idProduto from avaliacao);
@@ -394,7 +393,7 @@ where year(p.dataCompra) = 2025
 group by c.nome
 having count(distinct month(p.dataCompra)) = 12;
 
--- Fornecedores que n„o forneceram produtos
+-- Fornecedores que n√£o forneceram produtos
 select f.nome
 from fornecedor f
 where f.idFornecedor not in (select distinct idFornecedor from Fornece);
@@ -404,3 +403,4 @@ select p.nome
 from produto p
 where p.quantEstoque > 0
 and p.idProduto not in (select distinct idProduto from ItensPedido);
+
