@@ -2,6 +2,9 @@ package com.loja;
 
 import java.sql.SQLException;
 
+/*Aqui, estou criando duas classes. 
+A classe cliente serve para obter os atributos do mesmo, enquanto clienteDAO 
+serve para chamar o cliente e implementar métodos para manipular os dados utilizando os comandos em SQL */
 public class ClienteDAO {
 
     public void inserir(Cliente cliente) throws SQLException {

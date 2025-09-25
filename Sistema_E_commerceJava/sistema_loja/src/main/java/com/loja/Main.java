@@ -3,9 +3,10 @@ package com.loja;
 import java.io.Console;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class Main {
-    static Console teclado = System.console();
+    static Scanner teclado = new Scanner(System.in);
 
     public static void main(String[] args) {
         String url = "jdbc:sqlserver://localhost:1434;databaseName=master;encrypt=true;trustServerCertificate=true;";
@@ -17,7 +18,9 @@ public class Main {
         int opcao;
         do {
             exibirMenu();
-            opcao = Integer.parseInt(teclado.readLine());
+            opcao = teclado.nextInt();
+            // Limpa o buffer
+            teclado.nextLine();
             switch (opcao) {
                 case 1:
                     inserirClientes();
@@ -70,17 +73,39 @@ public class Main {
 
     // depois colocar os atributos como parâmetros dos métodos abaixo
     private static void inserirClientes() {
-        System.out.println("Inserindo clientes...");
+        System.out.println("Inserindo clientes...\n");
 
-        try (var conexao = ConexaoSQL.conectarBanco();) {
-            String sql = "insert into cliente (idCliente, nome, cpf, telefone, numero, rua, cep) " +
-                    "values (100, 'Carlos', '12345678910', '99887766', '123', 'Rua das Flores', '49000-000');";
+        System.out.println("Digite o ID do cliente:");
+        Long id = Long.parseLong(teclado.nextLine());
 
-            try (Statement stmt = conexao.createStatement()) {
-                stmt.executeUpdate(sql);
-                System.out.println("Cliente inserido com sucesso!");
-            }
+        System.out.println("Digite o nome do cliente:");
+        String nome = teclado.nextLine();
 
+        System.out.println("Digite o CPF do cliente:");
+        String cpf = String.valueOf(teclado.nextLong());
+
+        System.out.println("Digite o telefone do cliente:");
+        String telefone = String.valueOf(teclado.nextLong());
+        // Limpa o buffer
+        teclado.nextLine();
+
+        System.out.println("Digite a rua do cliente:");
+        String rua = teclado.nextLine();
+
+        System.out.println("Digite o número do cliente:");
+        String numero = String.valueOf(teclado.nextLong());
+        // Limpa o buffer
+        teclado.nextLine();
+
+        System.out.println("Digite o CEP do cliente:");
+        String cep = teclado.nextLine();
+
+        Cliente cliente = new Cliente(id, nome, cpf, telefone, rua, numero, cep);
+        ClienteDAO clienteDAO = new ClienteDAO();
+
+        try {
+            clienteDAO.inserir(cliente);
+            System.out.println("Cliente inserido com sucesso!\n");
         } catch (SQLException e) {
             System.out.println("Erro ao inserir cliente: " + e.getMessage());
         }
