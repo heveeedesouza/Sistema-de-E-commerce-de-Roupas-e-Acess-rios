@@ -14,7 +14,7 @@ create table pedido(
     status varchar (100) not null,
     formaDePagamento varchar (100) not null ,
     historico varchar (500),
-    idEntrega int null,
+    idEntrega int,
     foreign key (idEntrega) references entrega(idEntrega)
 );
 
@@ -44,7 +44,7 @@ create table promocao (
     status varchar(100) not null,
     dataInicio date not null,
     dataFim date not null,
-    idCategoria int null,
+    idCategoria int,
     foreign key (idCategoria) references categoria(idCategoria)
 );
 
