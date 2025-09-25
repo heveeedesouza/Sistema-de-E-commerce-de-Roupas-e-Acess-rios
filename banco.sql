@@ -101,7 +101,8 @@ create table cupomDesconto(
     idCupom int primary key not null,
     codigo varchar(100) not null,
     status varchar (100) not null,
-    tipoDeDesconto varchar(100)
+    tipoDeDesconto varchar(100),
+    dataValidade date not null
 );
 
 create table devolucao(
@@ -208,8 +209,8 @@ insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
 values (1, 'confirmado', 199.90, getdate(), 'cartão', 1);
 
 -- Inserir cupom de desconto
-insert into cupomDesconto (idCupom, codigo, status, tipoDeDesconto)
-values (1, 'DESC10', 'ativo', '10%');
+insert into cupomDesconto (idCupom, codigo, status, tipoDeDesconto, dataValidade)
+values (1, 'DESC10', 'ativo', '10%', '2025-12-31');
 
 -- Relacionar cupom com pedido
 insert into Ganha (idPedido, idCupom, descricao)
