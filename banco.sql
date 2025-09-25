@@ -151,6 +151,23 @@ create table troca (
     foreign key (idPedido) references pedido (idPedido)
 );
 
+DROP TABLE Ganha,
+           ItensPedido,
+           pagamento,
+           devolucao,
+           troca,
+           avaliacao,
+           Fornece,
+           RelacaoPromocao,
+           promocao,
+           produto,
+           pedido,
+           cupomDesconto,
+           fornecedor,
+           cliente,
+           entrega,
+           categoria;
+
 
 -------------------------------------------------------
 -- INSERÇÕES INICIAIS
@@ -175,6 +192,11 @@ values (1, 1, 'Fornecedor oficial do Vestido Azul');
 insert into Fornece (idProduto, idFornecedor, descricao)
 values (1, 2, 'Fornecedor alternativo do Vestido Azul');
 
+----------------------------------------------------------
+-- Deletar cliente 
+---------------------------------------------------------- 
+Delete from cliente
+where idCliente = 1;
 -------------------------------------------------------
 -- ATUALIZAÇÕES E REMOÇÕES
 -------------------------------------------------------
