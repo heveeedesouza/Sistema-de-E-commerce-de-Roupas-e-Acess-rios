@@ -26,8 +26,10 @@ public class Main {
                     inserirFornecedores();
                     break;
                 case 3:
+                    inserirProduto();
                     break;
                 case 4:
+                    definirFornecedorProduto();
                     break;
                 case 5:
                     excluirCliente();
@@ -59,8 +61,8 @@ public class Main {
         System.out.println("Escolha uma opção:");
         System.out.println("1. Inserir Clientes");
         System.out.println("2. Inserir Fornecedores");
-        System.out.println("3. Consultar ");
-        System.out.println("4. Atualizar ");
+        System.out.println("3. Inserir Produto");
+        System.out.println("4. Definir fornecedor para o produto");
         System.out.println("5. Excluir cliente");
         System.out.println("6. Sair");
         System.out.print("Escolha uma opção: ");
@@ -101,6 +103,41 @@ public class Main {
             System.out.println("Erro ao inserir fornecedor: " + e.getMessage());
         }
 
+    }
+
+    private static void inserirProduto() {
+        System.out.println("Inserindo Produto...");
+
+        try (var conexao = ConexaoSQL.conectarBanco();) {
+            String sql = "insert into produto (idProduto, descricao, nome, preco, quantEstoque, cor, tamanho) " +
+                    "values (100, 'Vestido Azul longo', 'Vestido Azul', 199.90, 10, 'Azul', 'M');";
+
+            try (Statement stmt = conexao.createStatement()) {
+                stmt.executeUpdate(sql);
+                System.out.println("Produto inserido com sucesso!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao inserir fornecedor: " + e.getMessage());
+        }
+
+    }
+
+    private static void definirFornecedorProduto() {
+        System.out.println("Definindo fornecedor para o produto...");
+
+        try (var conexao = ConexaoSQL.conectarBanco();) {
+            String sql = "insert into Fornece (idProduto, idFornecedor, descricao) " +
+                    "values (100, 100, 'Fornecedor oficial do Vestido Azul');";
+
+            try (Statement stmt = conexao.createStatement()) {
+                stmt.executeUpdate(sql);
+                System.out.println("Fornecedor definido com sucesso!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao definir fornecedor para o produto: " + e.getMessage());
+        }
     }
 
     private static void excluirCliente() {

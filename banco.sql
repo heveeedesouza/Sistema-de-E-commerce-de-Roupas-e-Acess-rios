@@ -193,7 +193,7 @@ insert into Fornece (idProduto, idFornecedor, descricao)
 values (1, 2, 'Fornecedor alternativo do Vestido Azul');
 
 ----------------------------------------------------------
--- Deletar cliente 
+-- Deletar
 ---------------------------------------------------------- 
 Delete from cliente
 where idCliente = 1;
