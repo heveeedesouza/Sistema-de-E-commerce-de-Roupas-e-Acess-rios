@@ -15,6 +15,11 @@ DROP TABLE IF EXISTS pedido;
 DROP TABLE IF EXISTS entrega;
 DROP TABLE IF EXISTS cliente;
 
+Select * from fornecedor
+
+SELECT f.* FROM fornecedor f WHERE f.idFornecedor NOT IN (SELECT DISTINCT idFornecedor FROM Fornece)
+SELECT f.* FROM fornecedor f JOIN Fornece fn ON f.idFornecedor = fn.idFornecedor WHERE fn.idProduto = 10
+
 create table cliente (
     idCliente int primary key not null,
     nome varchar (200) not null,
@@ -313,6 +318,10 @@ delete from Fornece where idProduto = 1;
 ----------- Excluindo o produto, que não é mais referenciado---------
 delete from produto where idProduto = 1;
 
+delete from fornecedor where idFornecedor = 10;
+Select * from fornecedor
+Select * from cliente
+Select * from produto
 
 
 

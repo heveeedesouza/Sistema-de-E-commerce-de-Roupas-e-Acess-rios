@@ -3,6 +3,8 @@ package com.loja;
 import java.io.Console;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -38,24 +40,21 @@ public class Main {
                     excluirCliente();
                     break;
                 case 6:
+                    listarFornecedores();
+                    break;
+                case 7:
+                    vincularFornecedorProduto();
+                    break;
+                case 8:
+
                     System.out.println("Saindo do sistema...");
                     break;
 
                 default:
                     System.out.println("Opção inválida!");
             }
-        } while (opcao != 6);
-        // inserirProdutos();
-        // inserirVendas();
-        // inserirItensVenda();
-        // consultarClientes();
-        // consultarProdutos();
-        // consultarVendas();
-        // consultarItensVenda();
-        // atualizarClientes();
-        // atualizarProdutos();
-        // atualizarVendas();
-        // atualizarItensVenda();
+            limparTela();
+        } while (opcao != 8);
 
     }
 
@@ -67,7 +66,24 @@ public class Main {
         System.out.println("3. Inserir Produto");
         System.out.println("4. Definir fornecedor para o produto");
         System.out.println("5. Excluir cliente");
-        System.out.println("6. Sair");
+        System.out.println("6. Listar fornecedores");
+        System.out.println("7. Vincular fornecedor a produto");
+        System.out.println("8. Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    public static void limparTela() {
+        for (int i = 0; i < 10; ++i)
+            System.out.println();
+    }
+
+    public static void exibirMenu2() {
+
+        System.out.println("Bem-vindo ao sistema de e-commerce!");
+        System.out.println("Escolha uma opção:");
+        System.out.println("1. Listar fornecedores sem produto");
+        System.out.println("2. Listar fornecedores por produto");
+        System.out.println("3. Sair");
         System.out.print("Escolha uma opção: ");
     }
 
@@ -115,19 +131,135 @@ public class Main {
     private static void inserirFornecedores() {
         System.out.println("Inserindo fornecedores...");
 
-        try (var conexao = ConexaoSQL.conectarBanco();) {
-            String sql = "insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)" +
-                    "values (100, '11222333000109', '99887766', 'Fornecedor12', '45', 'Rua Itabaiana', '49000-111');";
+        System.out.println("Digite o ID:");
+        Long id = teclado.nextLong();
 
-            try (Statement stmt = conexao.createStatement()) {
-                stmt.executeUpdate(sql);
-                System.out.println("Fornecedor inserido com sucesso!");
-            }
+        System.out.println("Digite o nome do fornecedor:");
+        String nome = teclado.nextLine();
 
+        System.out.println("Digite o CNPJ do fornecedor:");
+        String cnpj = String.valueOf(teclado.nextLong());
+
+        System.out.println("Digite o telefone do fornecedor:");
+        String telefone = String.valueOf(teclado.nextLong());
+        // Limpa o buffer
+        teclado.nextLine();
+
+        System.out.println("Digite a rua do fornecedor:");
+        String rua = teclado.nextLine();
+
+        System.out.println("Digite o número do fornecedor:");
+        String numero = String.valueOf(teclado.nextLong());
+        // Limpa o buffer
+        teclado.nextLine();
+
+        System.out.println("Digite o CEP do fornecedor:");
+        String cep = teclado.nextLine();
+        Fornecedor fornecedor = new Fornecedor(id, cnpj, telefone, nome, rua, numero, cep);
+
+        FornecedorDAO fornecedorDAO = new FornecedorDAO();
+        try {
+            fornecedorDAO.inserir(fornecedor);
+            System.out.println("Fornecedor inserido com sucesso!\n");
         } catch (SQLException e) {
             System.out.println("Erro ao inserir fornecedor: " + e.getMessage());
         }
 
+    }
+
+    private static void listarFornecedores() {
+        FornecedorDAO fornecedorDAO = new FornecedorDAO();
+        int op = 0;
+        do {
+            limparTela();
+            exibirMenu2();
+            op = teclado.nextInt();
+            // Limpa o buffer
+            teclado.nextLine();
+
+            switch (op) {
+                case 1:
+                    try {
+                        List<Fornecedor> fornecedores = fornecedorDAO.listarFornecedoresSemProdutos();
+                        if (fornecedores.isEmpty()) {
+                            System.out.println("Não existe fornecedores sem produtos.");
+                        } else {
+                            System.out.println("Fornecedores sem produtos:");
+                            for (var fornecedor : fornecedores) {
+                                System.out.print(fornecedor.toString());
+
+                            }
+                            System.out.println("Pressione ENTER para continuar...");
+                            teclado.nextLine();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Erro ao listar fornecedores: " + e.getMessage());
+                    }
+
+                    // Listar fornecedores sem produtos
+                    break;
+
+                case 2:
+                    System.out.println("Digite o ID do produto:");
+                    Long idProduto = teclado.nextLong();
+                    try {
+                        Fornecedor fornecedor = fornecedorDAO.listarFornecedoresPorProduto(idProduto);
+                        if (fornecedor == null) {
+                            System.out.println("Nenhum fornecedor encontrado para o produto com ID: " + idProduto);
+                        } else {
+
+                            System.out.print(fornecedor.toString());
+                            System.out.println("Pressione ENTER para continuar...");
+                            teclado.nextLine();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Erro ao listar fornecedores: " + e.getMessage());
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Saindo do sistema...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida!");
+            }
+
+        } while (op != 3);
+
+    }
+
+    private static void vincularFornecedorProduto() {
+        FornecedorDAO fornecedorDAO = new FornecedorDAO();
+        Fornecedor fornecedor = null;
+        Long idFornecedor = null;
+        System.out.println("Vinculando fornecedor ao produto...");
+
+        try {
+            while (true) {// não testado ainda
+                System.out.println("Digite o ID do fornecedor:");
+                idFornecedor = teclado.nextLong();
+                fornecedor = fornecedorDAO.buscar(idFornecedor);
+
+                if (fornecedor == null) {
+                    System.out.println("Fornecedor não encontrado.");
+                    return;
+                } else {
+                    break;
+                }
+            }
+            System.out.println("Digite o ID do produto:");
+            Long idProduto = teclado.nextLong();
+
+            System.out.println("Descreva o vínculo:");
+            String descricao = teclado.nextLine();
+
+            fornecedorDAO.vincularFornecedorProduto(idFornecedor, idProduto, descricao);
+            System.out.println("Fornecedor vinculado ao produto com sucesso!\n");
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao vincular fornecedor ao produto: " + e.getMessage());
+        }
     }
 
     private static void inserirProduto() {

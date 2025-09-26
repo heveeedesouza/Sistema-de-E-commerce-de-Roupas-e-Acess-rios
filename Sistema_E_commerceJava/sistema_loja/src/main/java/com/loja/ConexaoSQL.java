@@ -22,4 +22,15 @@ public class ConexaoSQL {
         return conexao;
     }
 
+    public static void fecharConexao(Connection conexao) {
+        if (conexao != null) {
+            try {
+                conexao.close();
+                System.out.println("Conexão fechada com sucesso.");
+            } catch (SQLException e) {
+                System.out.println("Erro ao fechar a conexão: " + e.getMessage());
+            }
+        }
+    }
+
 }
