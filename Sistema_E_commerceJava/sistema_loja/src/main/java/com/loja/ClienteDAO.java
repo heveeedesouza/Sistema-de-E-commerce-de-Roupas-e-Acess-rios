@@ -23,17 +23,50 @@ public class ClienteDAO {
              * cliente que eu pego com cliente.nome().
              * E assim por diante para os outros atributos
              */
-            stmt.setLong(1, cliente.id());
-            stmt.setString(2, cliente.nome());
-            stmt.setString(3, cliente.cpf());
-            stmt.setString(4, cliente.telefone());
-            stmt.setString(5, cliente.numero());
-            stmt.setString(6, cliente.rua());
-            stmt.setString(7, cliente.cep());
+            stmt.setLong(1, cliente.getId());
+            stmt.setString(2, cliente.getNome());
+            stmt.setString(3, cliente.getCpf());
+            stmt.setString(4, cliente.getTelefone());
+            stmt.setString(5, cliente.getNumero());
+            stmt.setString(6, cliente.getRua());
+            stmt.setString(7, cliente.getCep());
 
             stmt.executeUpdate(); // aqui está executando o comando sql que eu montei acima
         } catch (SQLException e) {
             throw new SQLException("Erro ao inserir cliente: " + e.getMessage());
+        }
+    }
+
+    public Boolean buscar(int id) throws SQLException {
+        var sql = "select * from cliente where idCliente = ?;";
+        Cliente cliente = null;
+
+        try (var conexao = ConexaoSQL.conectarBanco();
+                var stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            var rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cliente = new Cliente(
+                        rs.getInt("idCliente"),
+                        rs.getString("nome"),
+                        rs.getString("cpf"),
+                        rs.getString("telefone"),
+                        rs.getString("rua"),
+                        rs.getString("numero"),
+                        rs.getString("cep"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao buscar cliente: " + e.getMessage());
+        }
+
+        if (cliente != null) {
+            System.out.println("Cliente encontrado: " + cliente.getNome());
+            return true;
+        } else {
+            System.out.println("Cliente não encontrado.");
+            return false;
         }
     }
 

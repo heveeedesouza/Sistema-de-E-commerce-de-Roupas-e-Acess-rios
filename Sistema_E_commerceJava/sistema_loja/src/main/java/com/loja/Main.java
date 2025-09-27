@@ -1,14 +1,16 @@
 package com.loja;
 
-import java.io.Console;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     static Scanner teclado = new Scanner(System.in);
+    static ImprimeTela imprime = new ImprimeTela();
 
     public static void main(String[] args) {
         String url = "jdbc:sqlserver://localhost:1434;databaseName=master;encrypt=true;trustServerCertificate=true;";
@@ -19,7 +21,7 @@ public class Main {
 
         int opcao;
         do {
-            exibirMenu();
+            imprime.exibirMenu();
             opcao = teclado.nextInt();
             // Limpa o buffer
             teclado.nextLine();
@@ -31,7 +33,7 @@ public class Main {
                     inserirFornecedores();
                     break;
                 case 3:
-                    inserirProduto();
+                    inserirPedido();
                     break;
                 case 4:
                     definirFornecedorProduto();
@@ -46,77 +48,32 @@ public class Main {
                     vincularFornecedorProduto();
                     break;
                 case 8:
+                    atualizarStatusPedido();
+                    break;
+                case 9:
 
-                    System.out.println("Saindo do sistema...");
+                    listarPedidos(teclado.nextInt());
+                    break;
+                case 10:
+                    exibirTotalPedidosPeriodo();
+
+                    break;
+                case 11:
+                    exibirTotalVendasPeriodo();
+
                     break;
 
                 default:
                     System.out.println("Opção inválida!");
             }
-            limparTela();
-        } while (opcao != 8);
+            imprime.limparTela();
+        } while (opcao != 0);
 
     }
 
-    public static void exibirMenu() {
-        System.out.println("Bem-vindo ao sistema de e-commerce!");
-        System.out.println("Escolha uma opção:");
-        System.out.println("1. Inserir Clientes");
-        System.out.println("2. Inserir Fornecedores");
-        System.out.println("3. Inserir Produto");
-        System.out.println("4. Definir fornecedor para o produto");
-        System.out.println("5. Excluir cliente");
-        System.out.println("6. Listar fornecedores");
-        System.out.println("7. Vincular fornecedor a produto");
-        System.out.println("8. Sair");
-        System.out.print("Escolha uma opção: ");
-    }
-
-    public static void limparTela() {
-        for (int i = 0; i < 10; ++i)
-            System.out.println();
-    }
-
-    public static void exibirMenu2() {
-
-        System.out.println("Bem-vindo ao sistema de e-commerce!");
-        System.out.println("Escolha uma opção:");
-        System.out.println("1. Listar fornecedores sem produto");
-        System.out.println("2. Listar fornecedores por produto");
-        System.out.println("3. Sair");
-        System.out.print("Escolha uma opção: ");
-    }
-
-    // depois colocar os atributos como parâmetros dos métodos abaixo
     private static void inserirClientes() {
-        System.out.println("Inserindo clientes...\n");
 
-        System.out.println("Digite o ID do cliente:");
-        Long id = Long.parseLong(teclado.nextLine());
-
-        System.out.println("Digite o nome do cliente:");
-        String nome = teclado.nextLine();
-
-        System.out.println("Digite o CPF do cliente:");
-        String cpf = String.valueOf(teclado.nextLong());
-
-        System.out.println("Digite o telefone do cliente:");
-        String telefone = String.valueOf(teclado.nextLong());
-        // Limpa o buffer
-        teclado.nextLine();
-
-        System.out.println("Digite a rua do cliente:");
-        String rua = teclado.nextLine();
-
-        System.out.println("Digite o número do cliente:");
-        String numero = String.valueOf(teclado.nextLong());
-        // Limpa o buffer
-        teclado.nextLine();
-
-        System.out.println("Digite o CEP do cliente:");
-        String cep = teclado.nextLine();
-
-        Cliente cliente = new Cliente(id, nome, cpf, telefone, rua, numero, cep);
+        Cliente cliente = imprime.inserirInformacoesCliente();
         ClienteDAO clienteDAO = new ClienteDAO();
 
         try {
@@ -128,34 +85,10 @@ public class Main {
 
     }
 
+    /* Op com fornecedores */
     private static void inserirFornecedores() {
-        System.out.println("Inserindo fornecedores...");
 
-        System.out.println("Digite o ID:");
-        Long id = teclado.nextLong();
-
-        System.out.println("Digite o nome do fornecedor:");
-        String nome = teclado.nextLine();
-
-        System.out.println("Digite o CNPJ do fornecedor:");
-        String cnpj = String.valueOf(teclado.nextLong());
-
-        System.out.println("Digite o telefone do fornecedor:");
-        String telefone = String.valueOf(teclado.nextLong());
-        // Limpa o buffer
-        teclado.nextLine();
-
-        System.out.println("Digite a rua do fornecedor:");
-        String rua = teclado.nextLine();
-
-        System.out.println("Digite o número do fornecedor:");
-        String numero = String.valueOf(teclado.nextLong());
-        // Limpa o buffer
-        teclado.nextLine();
-
-        System.out.println("Digite o CEP do fornecedor:");
-        String cep = teclado.nextLine();
-        Fornecedor fornecedor = new Fornecedor(id, cnpj, telefone, nome, rua, numero, cep);
+        Fornecedor fornecedor = imprime.inserirInformacoesFornecedor();
 
         FornecedorDAO fornecedorDAO = new FornecedorDAO();
         try {
@@ -171,8 +104,8 @@ public class Main {
         FornecedorDAO fornecedorDAO = new FornecedorDAO();
         int op = 0;
         do {
-            limparTela();
-            exibirMenu2();
+            imprime.limparTela();
+            imprime.exibirMenuFornecedor();
             op = teclado.nextInt();
             // Limpa o buffer
             teclado.nextLine();
@@ -181,17 +114,7 @@ public class Main {
                 case 1:
                     try {
                         List<Fornecedor> fornecedores = fornecedorDAO.listarFornecedoresSemProdutos();
-                        if (fornecedores.isEmpty()) {
-                            System.out.println("Não existe fornecedores sem produtos.");
-                        } else {
-                            System.out.println("Fornecedores sem produtos:");
-                            for (var fornecedor : fornecedores) {
-                                System.out.print(fornecedor.toString());
-
-                            }
-                            System.out.println("Pressione ENTER para continuar...");
-                            teclado.nextLine();
-                        }
+                        imprime.imprimirFornecedoresSemProduto(fornecedores);
                     } catch (Exception e) {
                         System.out.println("Erro ao listar fornecedores: " + e.getMessage());
                     }
@@ -201,17 +124,10 @@ public class Main {
 
                 case 2:
                     System.out.println("Digite o ID do produto:");
-                    Long idProduto = teclado.nextLong();
+                    int idProduto = teclado.nextInt();
                     try {
-                        Fornecedor fornecedor = fornecedorDAO.listarFornecedoresPorProduto(idProduto);
-                        if (fornecedor == null) {
-                            System.out.println("Nenhum fornecedor encontrado para o produto com ID: " + idProduto);
-                        } else {
-
-                            System.out.print(fornecedor.toString());
-                            System.out.println("Pressione ENTER para continuar...");
-                            teclado.nextLine();
-                        }
+                        List<Fornecedor> fornecedores = fornecedorDAO.listarFornecedoresPorProduto(idProduto);
+                        imprime.imprimirFornecedoresPorProduto(fornecedores, idProduto);
                     } catch (Exception e) {
                         System.out.println("Erro ao listar fornecedores: " + e.getMessage());
                     }
@@ -232,13 +148,13 @@ public class Main {
     private static void vincularFornecedorProduto() {
         FornecedorDAO fornecedorDAO = new FornecedorDAO();
         Fornecedor fornecedor = null;
-        Long idFornecedor = null;
+        int idFornecedor = 0;
         System.out.println("Vinculando fornecedor ao produto...");
 
         try {
             while (true) {// não testado ainda
                 System.out.println("Digite o ID do fornecedor:");
-                idFornecedor = teclado.nextLong();
+                idFornecedor = teclado.nextInt();
                 fornecedor = fornecedorDAO.buscar(idFornecedor);
 
                 if (fornecedor == null) {
@@ -249,7 +165,7 @@ public class Main {
                 }
             }
             System.out.println("Digite o ID do produto:");
-            Long idProduto = teclado.nextLong();
+            int idProduto = teclado.nextInt();
 
             System.out.println("Descreva o vínculo:");
             String descricao = teclado.nextLine();
@@ -262,22 +178,142 @@ public class Main {
         }
     }
 
-    private static void inserirProduto() {
-        System.out.println("Inserindo Produto...");
+    /* Op com pedido */
+    // 8. Registrar um novo pedido de um cliente.
+    private static void inserirPedido() {
 
-        try (var conexao = ConexaoSQL.conectarBanco();) {
-            String sql = "insert into produto (idProduto, descricao, nome, preco, quantEstoque, cor, tamanho) " +
-                    "values (100, 'Vestido Azul longo', 'Vestido Azul', 199.90, 10, 'Azul', 'M');";
+        Pedido pedido = imprime.inserirInformacoesPedido();
+        PedidoDAO pedidoDAO = new PedidoDAO();
 
-            try (Statement stmt = conexao.createStatement()) {
-                stmt.executeUpdate(sql);
-                System.out.println("Produto inserido com sucesso!");
-            }
-
+        try {
+            pedidoDAO.inserir(pedido);
+            System.out.println("Pedido inserido com sucesso!\n");
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir fornecedor: " + e.getMessage());
+            System.out.println("Erro ao inserir pedido: " + e.getMessage());
         }
 
+    }
+
+    // 10. Atualizar o status de um pedido para “em processamento”, “enviado”,
+    // “entregue”, “cancelado” ou “devolvido”. ----> Adicionei separado E PAGAMENTO
+    // PENDENTE
+    private static void atualizarStatusPedido() {
+        PedidoDAO pedidoDAO = new PedidoDAO();
+        System.out.println("Atualizando status do pedido...");
+
+        try {
+            System.out.println("Digite o ID do pedido:");
+            int idPedido = teclado.nextInt();
+
+            if (pedidoDAO.buscar(idPedido) == null) {
+                return;
+            }
+
+            System.out.println("Digite o novo status do pedido:");
+            StatusPedido novoStatus = imprime.inserirStatusPedido();
+
+            pedidoDAO.atualizarStatus(idPedido, novoStatus);
+            System.out.println("Status do pedido atualizado com sucesso!");
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar status do pedido: " + e.getMessage());
+        }
+
+    }
+
+    // 18. Listar todos os pedidos realizados por um cliente.
+    // 21. Mostrar os pedidos que estão com status “pendente de pagamento”.
+    private static void listarPedidos(int op) {
+        PedidoDAO pedidoDAO = new PedidoDAO();
+        List<Cliente> cliente = new ArrayList<>();
+        switch (op) {
+            case 3:
+                System.out.println("Listando pedidos por cliente...");
+                System.out.println("Digite o ID do cliente:");
+                int idCliente = teclado.nextInt();
+
+                try {
+                    List<Pedido> pedidos = pedidoDAO.listarPedidosPorCliente(idCliente, cliente);
+                    if (!cliente.isEmpty()) {
+                        for (Cliente c : cliente) {
+                            System.out.println(
+                                    "Pedidos do(a) cliente: " + c.getNome() + " (CPF: " + c.getCpf() + "):\n");
+                            break;
+                        }
+                    }
+
+                    imprime.imprimirPedidos(pedidos);
+                } catch (SQLException e) {
+                    System.out.println("Erro ao listar pedidos: " + e.getMessage());
+                }
+                break;
+            case 4:
+                System.out.println("Listando pedidos com pagamento pendente...");
+                try {
+                    List<Pedido> pedidos = pedidoDAO.listarPedidosPendentesPagamento();
+                    imprime.imprimirPedidos(pedidos);
+                } catch (SQLException e) {
+                    System.out.println("Erro ao listar pedidos: " + e.getMessage());
+                }
+                break;
+
+            default:
+                System.out.println("Opção inválida!");
+        }
+
+    }
+
+    // 30. Exibir o total de pedidos realizados em um período específico.
+    private static void exibirTotalPedidosPeriodo() {
+        System.out.println("Exibindo total de pedidos em um período específico...");
+
+        LocalDate dataInicial = imprime.lerData("data inicial");
+        LocalDate dataFinal = imprime.lerData("data final");
+
+        if (!imprime.verificaData(dataInicial, dataFinal)) {
+            return;
+        }
+        PedidoDAO pedidoDAO = new PedidoDAO();
+
+        try {
+            int totalPedidos = pedidoDAO.contarTotalPedidosPeriodo(dataInicial, dataFinal);
+            System.out.println("Total de pedidos entre " + dataInicial + " e " + dataFinal + " é: " + totalPedidos);
+        } catch (SQLException e) {
+            System.out.println("Erro ao contar pedidos: " + e.getMessage());
+        }
+    }
+
+    // 31. Exibir o valor total arrecadado em vendas em um período.
+    private static void exibirTotalVendasPeriodo() {
+        System.out.println("Exibindo total de vendas em um período específico...");
+
+        LocalDate dataInicial = imprime.lerData("data inicial");
+        LocalDate dataFinal = imprime.lerData("data final");
+
+        if (!imprime.verificaData(dataInicial, dataFinal)) {
+            return;
+        }
+        PedidoDAO pedidoDAO = new PedidoDAO();
+
+        try {
+            double totalVendas = pedidoDAO.calcularValorTotalVendasPeriodo(dataInicial, dataFinal);
+            System.out.println("Total de vendas entre " + dataInicial + " e " + dataFinal + " é: R$" + totalVendas);
+        } catch (SQLException e) {
+            System.out.println("Erro ao calcular total de vendas: " + e.getMessage());
+        }
+    }
+
+    private static void adicionarItem() {
+        PedidoDAO pedidoDAO = new PedidoDAO();
+        ItensPedido itemPedido = new ItensPedido();
+        imprime.inserirItemPedido(pedidoDAO, itemPedido);
+        try {
+            pedidoDAO.adicionarItemPedido(itemPedido.getIdPedido(), itemPedido.getIdProduto(),
+                    itemPedido.getDescricao());
+            System.out.println("Item adicionado ao pedido com sucesso!");
+        } catch (SQLException e) {
+            System.out.println("Erro ao adicionar item ao pedido: " + e.getMessage());
+        }
     }
 
     private static void definirFornecedorProduto() {

@@ -1,7 +1,5 @@
 package com.loja;
 
-import com.loja.Fornecedor;
-import com.loja.ConexaoSQL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +24,19 @@ public class FornecedorDAO {
         }
     }
 
-    public Fornecedor buscar(Long id) throws SQLException {
+    public Fornecedor buscar(int id) throws SQLException {
         Fornecedor fornecedor = null;
         String sql = "SELECT * FROM fornecedor WHERE idFornecedor = ?";
 
         try (Connection conexao = ConexaoSQL.conectarBanco();
                 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 fornecedor = new Fornecedor(
-                        rs.getLong("idFornecedor"),
+                        rs.getInt("idFornecedor"),
                         rs.getString("cnpj"),
                         rs.getString("contato"),
                         rs.getString("nome"),
@@ -60,7 +58,7 @@ public class FornecedorDAO {
 
             while (rs.next()) {
                 Fornecedor fornecedor = new Fornecedor(
-                        rs.getLong("idFornecedor"),
+                        rs.getInt("idFornecedor"),
                         rs.getString("cnpj"),
                         rs.getString("contato"),
                         rs.getString("nome"),
@@ -73,8 +71,8 @@ public class FornecedorDAO {
         return fornecedores;
     }
 
-    public Fornecedor listarFornecedoresPorProduto(Long idProduto) throws SQLException {
-        Fornecedor fornecedor = null;
+    public List<Fornecedor> listarFornecedoresPorProduto(int idProduto) throws SQLException {
+        List<Fornecedor> fornecedores = new ArrayList<>();
         String sql = "SELECT f.* FROM fornecedor f " +
                 "JOIN Fornece fn ON f.idFornecedor = fn.idFornecedor " +
                 "WHERE fn.idProduto = ?";
@@ -82,31 +80,32 @@ public class FornecedorDAO {
         try (Connection conexao = ConexaoSQL.conectarBanco();
                 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setLong(1, idProduto);
+            stmt.setInt(1, idProduto);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                fornecedor = new Fornecedor(
-                        rs.getLong("idFornecedor"),
+                Fornecedor fornecedor = new Fornecedor(
+                        rs.getInt("idFornecedor"),
                         rs.getString("cnpj"),
                         rs.getString("contato"),
                         rs.getString("nome"),
                         rs.getString("rua"),
                         rs.getString("numero"),
                         rs.getString("cep"));
+                fornecedores.add(fornecedor);
             }
         }
-        return fornecedor;
+        return fornecedores;
     }
 
-    public void vincularFornecedorProduto(Long idFornecedor, Long idProduto, String descricao) throws SQLException {
+    public void vincularFornecedorProduto(int idFornecedor, int idProduto, String descricao) throws SQLException {
         String sql = "INSERT INTO Fornece (idProduto, idFornecedor, descricao) VALUES (?, ?, ?)";
 
         try (Connection conexao = ConexaoSQL.conectarBanco();
                 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setLong(1, idProduto);
-            stmt.setLong(2, idFornecedor);
+            stmt.setInt(1, idProduto);
+            stmt.setInt(2, idFornecedor);
             stmt.setString(3, descricao);
 
             stmt.executeUpdate();

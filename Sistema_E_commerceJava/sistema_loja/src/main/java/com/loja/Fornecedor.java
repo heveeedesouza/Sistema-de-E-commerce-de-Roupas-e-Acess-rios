@@ -1,7 +1,7 @@
 package com.loja;
 
 public class Fornecedor {
-    private Long id;
+    private int id;
     private String cnpj;
     private String contato;
     private String nome;
@@ -9,7 +9,10 @@ public class Fornecedor {
     private String numero;
     private String cep;
 
-    public Fornecedor(Long id, String cnpj, String contato, String nome, String rua, String numero, String cep) {
+    public Fornecedor() {
+    }
+
+    public Fornecedor(int id, String cnpj, String contato, String nome, String rua, String numero, String cep) {
         this.id = id;
         this.cnpj = cnpj;
         this.contato = contato;
@@ -20,11 +23,11 @@ public class Fornecedor {
     }
 
     // Getters e Setters
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
