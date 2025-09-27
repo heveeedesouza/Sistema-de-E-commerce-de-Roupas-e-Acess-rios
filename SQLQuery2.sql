@@ -271,6 +271,8 @@ update pedido set status = 'em processamento' where idPedido = 1;
 --------- Inserir pagamento-------
 insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
 values (1, 'confirmado', 199.90, getdate(), 'cartão', 1);
+insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
+values (2, 'pendente', 199.90, getdate(), 'cartão', 2);
 
 --------- Inserir cupom de desconto-------
 insert into cupomDesconto (idCupom, codigo, status, tipoDeDesconto, dataValidade)
@@ -350,7 +352,7 @@ where ip.idPedido = 1;
 select valor, modalidade from pagamento where idPedido = 1;
 
 ----------- Pedidos pendentes de pagamento---------
-select idPedido from pedido where historico = 'pagamento pendente';
+select idPedido from pagamento where status = 'pendente';
 
 ----------- Pedidos entregues dentro de setembro de 2025---------
 select * from pedido
@@ -463,3 +465,4 @@ select p.nome
 from produto p
 where p.quantEstoque > 0
 and p.idProduto not in (select distinct idProduto from ItensPedido);
+
