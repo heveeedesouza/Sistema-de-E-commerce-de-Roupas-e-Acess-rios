@@ -25,8 +25,9 @@ create table cliente (
     nome varchar (200) not null,
     cpf varchar(20) not null,
     telefone varchar(30) not null,
+    email varchar(30) not null,
     rua varchar (100) not null,
-    numero varchar(20) not null,
+    numeroRua varchar(20) not null,
     cep varchar (20) not null
 );
 
@@ -93,7 +94,8 @@ create table RelacaoPromocao (
 create table fornecedor(
     idFornecedor int primary key not null,
     cnpj varchar(20) not null,
-    contato varchar(50) not null,
+    telefone varchar(50) not null,
+    email varchar(30) not null,
     nome varchar (100) not null,
     rua varchar (100) not null,
     numero varchar(20) not null,
@@ -457,3 +459,4 @@ select p.nome
 from produto p
 where p.quantEstoque > 0
 and p.idProduto not in (select distinct idProduto from ItensPedido);
+
