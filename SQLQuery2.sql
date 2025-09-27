@@ -230,10 +230,16 @@ values (1, 1, 'Vestido Azul tamanho M'),
        (1, 2, 'Bolsa Preta Couro');
 
 ------ Produto com promoção ativa ----------------
+insert into promocao (idPromocao,nome,descricao,status,dataInicio,dataFim,idCategoria)
+values (1,'Bolsas pela metade','Todas as bolsas de couro da loja por metado do preço','ativa','2025-09-15','2025-09-29',1)
 insert into RelacaoPromocao (idProduto, idPromocao, descricao)
 values (2, 1, 'Bolsa Preta em promoção de verão');
 
+
+
 ------ Pedidos que foram entrgues esse mês e seu pagamento ----------------
+insert into entrega (idEntrega,dataPrevista,status,dataEfetiva,transportadora,codRastreio)
+values(1,'2025-09-26','enviado','2025-09-29','MateoTranports',12356)
 insert into pedido (idPedido, dataCompra, valorTotal, status, formaDePagamento, historico, idEntrega, idCliente)
 values (2, '2025-09-15', 500.00, 'entregue', 'pix', 'Pedido finalizado', 1, 2);
 
@@ -272,11 +278,13 @@ update pedido set status = 'em processamento' where idPedido = 1;
 insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
 values (1, 'confirmado', 199.90, getdate(), 'cartão', 1);
 insert into pagamento (idPagamento, status, valor, data, modalidade, idPedido)
-values (2, 'pendente', 199.90, getdate(), 'cartão', 2);
+values (3, 'pendente', 199.90, getdate(), 'cartão', 2);
+
+
 
 --------- Inserir cupom de desconto-------
 insert into cupomDesconto (idCupom, codigo, status, tipoDeDesconto, dataValidade)
-values (1, 'DESC10', 'ativo', '10%', '2025-12-31');
+values (2, 'DESC15', 'ativo', '15%', '2025-12-31');
 
 --------- Relacão de cupom com pedido-------
 insert into Ganha (idPedido, idCupom, descricao)
@@ -284,11 +292,14 @@ values (1, 1, 'Desconto aplicado de 10%');
 
 --------- Inserir promoção-------
 insert into promocao (idPromocao, nome, descricao, status, dataInicio, dataFim, idCategoria)
-values (1, 'Promo Verão', 'Desconto roupas', 'ativa', '2025-09-01', '2025-09-30', 1);
+values (2, 'Promo Verão', 'Desconto roupas', 'ativa', '2025-09-01', '2025-09-30', 1);
+
+
 
 ----------- Inserir entrega---------
 insert into entrega (idEntrega, dataPrevista, status, dataEfetiva, transportadora, codRastreio)
-values (1, '2025-09-30', 'pendente', NULL, 'Correios', 'BR123456789');
+values (2, '2025-09-30', 'pendente', NULL, 'Correios', 'BR123456789');
+
 
 ----------- Inserir devolução---------
 insert into devolucao (idDevolucao, status, motivo, idPedido)
@@ -366,6 +377,7 @@ join produto p on rp.idProduto = p.idProduto
 join promocao pr on rp.idPromocao = pr.idPromocao
 where pr.status = 'ativa';
 
+
 ----------- Pedidos com cupom aplicado---------
 select distinct g.idPedido, c.codigo
 from Ganha g
@@ -375,6 +387,7 @@ join cupomDesconto c on g.idCupom = c.idCupom;
 select distinct c.nome
 from cliente c
 join avaliacao a on c.idCliente = a.idCliente;
+
 
 ----------- Clientes com pedidos não entregues ou sem entrega---------
 select distinct c.nome
