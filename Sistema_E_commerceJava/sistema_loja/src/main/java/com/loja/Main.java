@@ -62,6 +62,10 @@ public class Main {
                     exibirTotalVendasPeriodo();
 
                     break;
+                case 12:
+                    adicionarItem();
+
+                    break;
 
                 default:
                     System.out.println("Opção inválida!");

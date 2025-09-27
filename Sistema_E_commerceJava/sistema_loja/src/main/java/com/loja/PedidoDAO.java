@@ -43,7 +43,7 @@ public class PedidoDAO {
                         rs.getInt("idPedido"),
                         rs.getDate("dataCompra").toLocalDate(),
                         rs.getDouble("valorTotal"),
-                        StatusPedido.valueOf(rs.getString("status")),
+                        StatusPedido.valueOf(rs.getString("status").toUpperCase()),
                         rs.getString("formaDePagamento"),
                         rs.getString("historico"),
                         rs.getInt("idEntrega"),
@@ -52,6 +52,29 @@ public class PedidoDAO {
                 return pedido;
             } else {
                 System.out.println("Pedido não encontrado.");
+                return null;
+            }
+        }
+    }
+
+    public ItensPedido buscarItensPedido(int idPedido) throws SQLException {
+        String sql = "SELECT * FROM ItensPedido WHERE idPedido = ?";
+
+        try (Connection conexao = ConexaoSQL.conectarBanco();
+                PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+            stmt.setInt(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                ItensPedido itemPedido = new ItensPedido(
+                        rs.getInt("idPedido"),
+                        rs.getInt("idProduto"),
+                        rs.getString("descricao"));
+                System.out.println("Item do pedido encontrado: " + itemPedido);
+                return itemPedido;
+            } else {
+                System.out.println("Item do pedido não encontrado.");
                 return null;
             }
         }

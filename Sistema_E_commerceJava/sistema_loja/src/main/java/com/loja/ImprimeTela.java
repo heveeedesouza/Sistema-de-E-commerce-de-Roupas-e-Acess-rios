@@ -266,12 +266,15 @@ public class ImprimeTela {
             if (pedidoDAO.buscar(itensPedido.getIdPedido()) == null) {
                 return;
             }
+            System.out.println("Digite o ID do produto:");
+            itensPedido.setIdProduto(teclado.nextInt());
+
+            // TODO: verificar depois se produto existe
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("Digite o ID do produto:");
-        itensPedido.setIdProduto(teclado.nextInt());
+
         System.out.println("Descreva o item:");
         teclado.nextLine(); // Limpa o buffer
         itensPedido.setDescricao(teclado.nextLine());
