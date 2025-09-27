@@ -15,11 +15,6 @@ DROP TABLE IF EXISTS pedido;
 DROP TABLE IF EXISTS entrega;
 DROP TABLE IF EXISTS cliente;
 
-Select * from fornecedor
-
-SELECT f.* FROM fornecedor f WHERE f.idFornecedor NOT IN (SELECT DISTINCT idFornecedor FROM Fornece)
-SELECT f.* FROM fornecedor f JOIN Fornece fn ON f.idFornecedor = fn.idFornecedor WHERE fn.idProduto = 10
-
 create table cliente (
     idCliente int primary key not null,
     nome varchar (200) not null,
@@ -102,6 +97,7 @@ create table fornecedor(
     cep varchar (20) not null
 );
 
+
 create table Fornece (
     idProduto int not null,
     idFornecedor int not null,
@@ -177,24 +173,26 @@ create table troca (
 
 
 ------- Inserir cliente-------
-insert into cliente (idCliente, nome, cpf, telefone, numero, rua, cep)
-values (1, 'Maria', '11', '99887766', '123', 'Rua das Flores', '49000-000');
+insert into cliente (idCliente, nome, cpf, telefone, email, rua, numeroRua, cep)
+values (1, 'Maria', '11', '99887766', 'email@', 'Rua das Flores', '123', '49000-000');
 
-insert into cliente (idCliente, nome, cpf, telefone, numero, rua, cep)
-values (2, 'Luiza', '22', '99887700', '124', 'Rua itabaiana', '49000-005');
+insert into cliente (idCliente, nome, cpf, telefone, email, rua, numeroRua, cep)
+values (2, 'Luiza', '22', '99887700', 'email@', 'Rua Itabaiana', '124', '49000-005');
 
-insert into cliente (idCliente, nome, cpf, telefone, numero, rua, cep)
-values (3, 'Lunna', '33', '99887703', '125', 'Rua da ufs', '49400-005');
+insert into cliente (idCliente, nome, cpf, telefone, email, rua, numeroRua, cep)
+values (3, 'Lunna', '33', '99887703', 'email@', 'Rua da UFS', '125', '49400-005');
+
 
 --------- Inserir fornecedores-------
-insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)
-values (1, '11222333000199', '99887766', 'Fornecedor1', '45', 'Rua Itabaiana', '49000-111');
+insert into fornecedor (idFornecedor, cnpj, telefone, email, nome, numero, rua, cep)
+values (1, '11222333000199', '99887766', 'email@fornecedor1.com', 'Fornecedor1', '45', 'Rua Itabaiana', '49000-111');
 
-insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)
-values (2, '99887766000188', '955773344', 'Fornecedor2', '40', 'Rua Ribeirópolis', '49530-010');
+insert into fornecedor (idFornecedor, cnpj, telefone, email, nome, numero, rua, cep)
+values (2, '99887766000188', '955773344', 'email@fornecedor2.com', 'Fornecedor2', '40', 'Rua Ribeirópolis', '49530-010');
 
-insert into fornecedor (idFornecedor, cnpj, contato, nome, numero, rua, cep)
-values (3, '55443322000166', '999888777', 'FornecedorSemProduto', '50', 'Rua da ufs', '49010-000');
+insert into fornecedor (idFornecedor, cnpj, telefone, email, nome, numero, rua, cep)
+values (3, '55443322000166', '999888777', 'email@fornecedorsemproduto', 'FornecedorSemProduto', '50', 'Rua da UFS', '49010-000');
+
 
 
 --------- Inserir categorias-------
@@ -224,7 +222,7 @@ values (1, 2, 'Fornecedor alternativo do Vestido Azul');
 
 --------- Inserir pedido-------
 insert into pedido (idPedido, dataCompra, valorTotal, status, formaDePagamento, historico, idEntrega, idCliente)
-values (1, getdate(),429.90 , 'pagamento pendente', 'cartão', 'Pedido criado', null, 1);
+values (1, getdate(),429.90 , 'em processamento', 'cartão', 'pagamento pendente', null, 1);
 
 --------- Inserir itens do pedido-------
 insert into ItensPedido (idPedido, idProduto, descricao)
@@ -330,6 +328,12 @@ Select * from produto
 ------------------ SELECTS------------------
 
 
+Select * from fornecedor
+
+SELECT f.* FROM fornecedor f WHERE f.idFornecedor NOT IN (SELECT DISTINCT idFornecedor FROM Fornece)
+SELECT f.* FROM fornecedor f JOIN Fornece fn ON f.idFornecedor = fn.idFornecedor WHERE fn.idProduto = 10
+
+
 ----------- Pedidos com seus itens---------
 select * from pedido where idPedido in (
   select idPedido from ItensPedido ip
@@ -346,7 +350,7 @@ where ip.idPedido = 1;
 select valor, modalidade from pagamento where idPedido = 1;
 
 ----------- Pedidos pendentes de pagamento---------
-select * from pedido where status = 'pagamento pendente';
+select idPedido from pedido where historico = 'pagamento pendente';
 
 ----------- Pedidos entregues dentro de setembro de 2025---------
 select * from pedido
@@ -459,4 +463,3 @@ select p.nome
 from produto p
 where p.quantEstoque > 0
 and p.idProduto not in (select distinct idProduto from ItensPedido);
-
